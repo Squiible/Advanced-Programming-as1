@@ -2,103 +2,87 @@ package main_code;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+
 public class MNIST_reader {
 	
+	BufferImage[] train_dataset = null;
+	
+	public BufferImage[] getTrainDataSet() {
+		return this.train_dataset;
+	}
+	
+	public void Read() throws IOException {
+	//declare variables
 	String train_label_filename = "C:\\Users\\Jake\\OneDrive\\Documents\\UNI\\Year 3 - Computer Science\\Advanced Programming\\DigitRecognize\\src\\backend\\train-labels.idx1-ubyte";
 	String train_image_filename = "C:\\Users\\Jake\\OneDrive\\Documents\\UNI\\Year 3 - Computer Science\\Advanced Programming\\DigitRecognize\\src\\backend\\train-images.idx3-ubyte";
 	
-	FileInputStream in_stream_labels = null;
-	FileInputStream in_stream_images = null;
-	BufferedImage currentImg;
+	//using byte streams
+	DataInputStream label_data_stream = null;
+	DataInputStream image_data_stream= null;
 	
-	//creates arrays
-	int[] label_list;
-	BufferedImage[] image_list;
-	//creates arrays
-	public int[] getLabels(){
-		return label_list;
-	}
-	
-	public BufferedImage[] getImage(){
-		return image_list;
-	}
-	
-	public void load_MNIST() {
-		
 	try {
-		in_stream_labels = new FileInputStream(new File(train_label_filename));
-		in_stream_images = new FileInputStream(new File(train_image_filename));
-
-		int labels_start_code = (in_stream_labels.read() << 24) |
-				(in_stream_labels.read() << 16) |
-				(in_stream_labels.read() << 8) |
-				(in_stream_labels.read());
+		label_data_stream = new DataInputStream(new FileInputStream(train_label_filename));
+		image_data_stream = new DataInputStream(new FileInputStream(train_image_filename));
 		
-		System.out.println("Label start code" + labels_start_code);
 		
-		int images_start_code = (in_stream_labels.read() << 24) |
-				(in_stream_images.read() << 16) |
-				(in_stream_images.read() << 8) |
-				(in_stream_images.read());
 		
-		System.out.println("images start code" + images_start_code);
+		//read first 4 bytes 
+		int startcode_img = image_data_stream.readInt();
+		int startcode_label = label_data_stream.readInt();
 		
-		int number_of_labels = (in_stream_labels.read() << 24) |
-				(in_stream_labels.read() << 16) |
-				(in_stream_labels.read() << 8) |
-				(in_stream_labels.read());
+		System.out.println("start code: images = " + startcode_img +
+			" startcode labels = " + startcode_label);
 		
-		int number_of_images = (in_stream_images.read() << 24) |
-				(in_stream_images.read() << 16) |
-				(in_stream_images.read() << 8) |
-				(in_stream_images.read());
+		// read the size: 4 bytes
+		int number_of_labels = label_data_stream.readInt();
+		int number_of_images = image_data_stream.readInt();
+	
+		System.out.println("number of labels: " + number_of_labels + " " +
+				"number of images: " + number_of_images);
 		
-		System.out.println("number of lables and images" + number_of_labels + "and" + number_of_images);
-
+		int image_height = image_data_stream.readInt();
+		int image_width = image_data_stream.readInt();
 		
-		int image_height = (in_stream_images.read() << 24) |
-				(in_stream_images.read() << 16) |
-				(in_stream_images.read() << 8) |
-				(in_stream_images.read());
+		System.out.println("image size: " + image_width + " x "
+		+ image_height);
 		
-		int image_width = (in_stream_images.read() << 24) |
-				(in_stream_images.read() << 16) |
-				(in_stream_images.read() << 8) |
-				(in_stream_images.read());
+		//byte array for labels
+		byte[] label_data = new byte[number_of_labels];
+		label_data_stream.read(label_data);
+		train_dataset = new BufferImage[number_of_labels];
 		
-		System.out.println("Image size: " + image_width + " x " + image_height);
-		int image_size = image_width * image_height;
+		//byte array for images
+		int image_size = image_height * image_width;
+		byte[] image_data = new byte[image_size * number_of_images];
 		
-		label_list = new int[number_of_labels];
-		image_list = new BufferedImage[number_of_labels];
-		//creates array
-		int[] image_data;
-		for(int record = 0; record < number_of_images; record++){
+		BufferedImage currentImg = new BufferedImage(image_width, image_height, BufferedImage.TYPE_INT_ARGB);
+		int[][] image;
+		//access individual images and labels
+		for(int i = 0; i < number_of_labels; i++)
+		{
+			int label = label_data[i];
+			//System.out.println(label);
 			
-			int label = in_stream_labels.read();
-			label_list[record] = label;
-			System.out.println(label);
+			image = new int[image_width][image_height];
 			
-			image_data = new int[image_width * image_height];
-			
-			for (int pixel = 0; pixel <image_size; pixel++){
-				
-				int grey_value= in_stream_images.read();
-				int rgb_value = 0xFF000000 | (grey_value << 16 ) |
-						(grey_value << 8) |
-						(grey_value);
-				image_data[pixel] = rgb_value;
-				
+			for(int row = 0; row < image_height; row++) {
+				for(int col = 0; col < image_width; col++){
+					
+					image[row][col] = image_data[(i*image_size)+((row*image_width) + col)];
+					currentImg.setRGB(col, row, image[row][col]);
+					
+				}
 			}
-			currentImg.setRGB(0, 0, image_width, image_height, image_data, 0, image_width);
-			image_list[record] = currentImg;	
+			train_dataset[i] = new BufferImage(label, currentImg);
+			
 		}
-		
-	   } catch (IOException e){
-		   
-		   e.printStackTrace();
-	   } 
+		System.out.println(train_dataset[5].getLabel());
+//		System.out.println(train_dataset[5].getcurrentImg());
+
 	}
 	
-	
+	finally{
+		}	
+	}	
+
 }
