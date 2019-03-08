@@ -9,7 +9,6 @@ public class ImageProcessing {
 	private BufferedImage currentImage = null;
 	private BufferedImage grayscaleImg = null;
 	
-	
 	public BufferedImage getImage() {
 		return currentImage;
 	}
