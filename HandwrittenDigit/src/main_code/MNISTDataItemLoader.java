@@ -9,12 +9,12 @@ public class MNISTDataItemLoader {
 	// import MNIST images
 	String train_label_filename = "C:\\Users\\Jake\\OneDrive\\Documents\\UNI\\Year 3 - Computer Science\\Advanced Programming\\DigitRecognize\\src\\backend\\train-labels.idx1-ubyte";
 	String train_image_filename = "C:\\Users\\Jake\\OneDrive\\Documents\\UNI\\Year 3 - Computer Science\\Advanced Programming\\DigitRecognize\\src\\backend\\train-images.idx3-ubyte";
-	
+	//creates the streams
 	FileInputStream in_stream_labels = null;
 	FileInputStream in_stream_images = null;
 	DataInputStream dataStreamLables = null; 
 	DataInputStream dataStreamImages = null; 
-	
+	//creates array
 	private MNISTItem[] currentDataItems = null;
 	private int recognizedDigit;
 	
@@ -73,7 +73,6 @@ public class MNISTDataItemLoader {
 					}
 					
 				}
-				
 				newlabeledimage.setMNISTbuffimage(tempImage); 
 				currentDataItems[currentRecord] = newlabeledimage;
 			}
@@ -92,7 +91,7 @@ public class MNISTDataItemLoader {
 	
 	}
 	
-	// ADD IN ARRAY SORT !!!!! BY KNN DISTANCE VALUE , 
+	// Adds in an array sort
 	public void sortArray() {  
 	    int n = currentDataItems.length;  
 	    MNISTItem tempDI = null;  
@@ -136,49 +135,13 @@ public class MNISTDataItemLoader {
 		}
 	}
 	
-	public double getConfidence(int k) {   
-		int maxCountLabel = 0; 
-	    int maxCount = 0;
-	    try {
-	    	this.sortArray(); 
-			int[] labelArray = new int [k];
-			MNISTItem[] tempMDIArray = this.getDIArray();
-			for(int internalCount = 0; internalCount < k; internalCount++) { 
-				MNISTItem lblIndex = tempMDIArray[internalCount];
-				labelArray[internalCount] = lblIndex.getMNIST_label();
-			}
-			int [][ ] countTrackingArray = new int[9][1];
-			for (int selectedNumber = 1; selectedNumber <= 9; selectedNumber++) {
-				int totalCount = 0; 
-				for(int actualCount = 0; actualCount < labelArray.length; actualCount++) {
-					if (labelArray[actualCount] == selectedNumber) {
-						totalCount = totalCount + 1;
-						
-					}
-				}
-				countTrackingArray[(selectedNumber-1) ][0] = totalCount;			
-			}
-			for (int iteratedNumber =  0; iteratedNumber < 9; iteratedNumber++) {
-				if (maxCount < countTrackingArray[iteratedNumber][0]) {
-					maxCount = countTrackingArray[iteratedNumber][0]; 
-					maxCountLabel  = iteratedNumber + 1; 
-				}
-			}	
-
-	    	 } catch (Exception e) {
-	    		 e.printStackTrace();
-	    	 }
-	    	this.setRecogniseDidgit(maxCountLabel);
-		    double accuracyratio = ((double) maxCount / k) * 100; 
-			return accuracyratio;	
-		}
 	
 
 	public int getRecogniseDidgit() {
 		return this.recognizedDigit;
 	}
 	
-	public void setRecogniseDidgit( int suppliedDidgit) {
+	public void setRecogniseDigit( int suppliedDidgit) {
 		this.recognizedDigit = suppliedDidgit;
 	}
 	

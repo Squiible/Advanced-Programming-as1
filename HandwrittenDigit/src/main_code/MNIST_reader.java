@@ -11,10 +11,10 @@ public class MNIST_reader {
 	FileInputStream in_stream_images = null;
 	BufferedImage currentImg;
 	
+	//creates arrays
 	int[] label_list;
 	BufferedImage[] image_list;
-	
-	
+	//creates arrays
 	public int[] getLabels(){
 		return label_list;
 	}
@@ -53,7 +53,6 @@ public class MNIST_reader {
 				(in_stream_images.read() << 8) |
 				(in_stream_images.read());
 		
-		
 		System.out.println("number of lables and images" + number_of_labels + "and" + number_of_images);
 
 		
@@ -70,12 +69,10 @@ public class MNIST_reader {
 		System.out.println("Image size: " + image_width + " x " + image_height);
 		int image_size = image_width * image_height;
 		
-		
 		label_list = new int[number_of_labels];
 		image_list = new BufferedImage[number_of_labels];
-		
+		//creates array
 		int[] image_data;
-		
 		for(int record = 0; record < number_of_images; record++){
 			
 			int label = in_stream_labels.read();
@@ -95,7 +92,6 @@ public class MNIST_reader {
 			}
 			currentImg.setRGB(0, 0, image_width, image_height, image_data, 0, image_width);
 			image_list[record] = currentImg;	
-			
 		}
 		
 	   } catch (IOException e){

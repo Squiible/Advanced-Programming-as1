@@ -1,18 +1,16 @@
 package UI;
-
-
-
 import javax.swing.*;
-import java.util.concurrent.Executors;
 
+import main_code.MNIST_reader;
+
+import java.util.concurrent.Executors;
 
 public class Run {
 
     private static JFrame mainFrame = new JFrame();
 
     public static void main(String[] args) throws Exception {
-
-
+    	
         UI ui = new UI();
         Executors.newCachedThreadPool().submit(()->{
                 try {

@@ -14,21 +14,20 @@ import java.awt.event.*;
 public class UI {
 
    //set JFrame width/height to integer
-    private static final int FRAME_WIDTH = 810;
-    private static final int FRAME_HEIGHT = 510;
+    private static final int FRAME_WIDTH = 1000;
+    private static final int FRAME_HEIGHT = 500;
 
    //Initialise variables
     private DrawCanvas drawArea;
     
     private JFrame mainFrame;
-    
     private JPanel mainPanel;
-    private JPanel drawDigit_predictionPanel;  
+    private JPanel prediction_pannel;  
     private JPanel outputPanel;
     
     private JFileChooser fileChooser;
     
-    private final Font sansSerifBold = new Font("SansSerif", Font.BOLD, 10);
+    private final Font sansSerifBold = new Font("SansSerif", Font.BOLD, 11);
 
     private JButton openFileBtn;
 	private JTextField fileNameTxt;
@@ -36,8 +35,6 @@ public class UI {
 	private JLabel image;
 	private String selectFile = "";
 	private JProgressBar progressBar;
-
-	//ImageModel imgModel;
 	
 	//set up exceptions
     public UI() throws Exception {
@@ -56,13 +53,13 @@ public class UI {
         //call addTopPanel function
         addTopPanel();
         //create drawAndDigitPredictionPanel panel and give it a grid layout
-        drawDigit_predictionPanel = new JPanel(new GridLayout());
+        prediction_pannel = new JPanel(new GridLayout());
         //call addActionPanel function
         addActionPanel();
         //call addDrawAreaAndPredictionArea function
         addDrawAreaAndPredictionPanel();
         //add addDrawAreaAndPredictionArea to the center of the main panel
-        mainPanel.add(drawDigit_predictionPanel, BorderLayout.CENTER);
+        mainPanel.add(prediction_pannel, BorderLayout.CENTER);
         //add mainpanel to the center of the mainFrame
         mainFrame.add(mainPanel, BorderLayout.CENTER);
         //make sure the mainframe is visible when Initialized
@@ -83,7 +80,7 @@ public class UI {
         clear.addActionListener(e -> {
                 drawArea.setImage(null);
                 drawArea.repaint();
-                drawDigit_predictionPanel.updateUI();
+                prediction_pannel.updateUI();
                 image.setIcon( null );    
 		        outputPanel.removeAll();
 		        fileNameTxt.setText("");
@@ -138,7 +135,7 @@ public class UI {
 
         drawArea = new DrawCanvas();
         
-        drawDigit_predictionPanel.add(drawArea);
+        prediction_pannel.add(drawArea);
 
     	outputPanel = new JPanel();
     	
@@ -158,27 +155,28 @@ public class UI {
         fileNameLbl = new JLabel ("The File name: ");
         fileNameTxt = new JTextField(50);
         fileNameTxt.setEnabled(false);        
-        openFileBtn = new JButton("Browse Files");
+        openFileBtn = new JButton("Browse for a File");
         
         progressBar = new JProgressBar(0, 100);        
         progressBar.setValue(0);
+        // Set the indeterminate property to true
         progressBar.setStringPainted(true);
-        progressBar.setIndeterminate(true); // Set the indeterminate property to true
-//        progressBar.setString(); 
+        progressBar.setIndeterminate(true);
+        //progressBar.setString(); 
 		
         // Add components to the JPanel
         fileSelectPanel.add(fileNameLbl);
         fileSelectPanel.add(fileNameTxt);
         fileSelectPanel.add(openFileBtn);
         fileSelectPanel.add(progressBar);
-        
+      
 		openFileBtn.addActionListener(new ActionListener() {
 			
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				File selectedFile = showFileChooserDialog();
-				
+				//gives the button the action to open files
 				if(selectedFile != null) {
 					fileNameTxt.setText(selectedFile.getAbsolutePath());
 					selectFile = selectedFile.getAbsolutePath();
@@ -197,16 +195,13 @@ public class UI {
 	    			        DILoader.setImageController(ICObject);
 	    			        DILoader.loadItemArray();		     
 	    			        DILoader.computingEcludianDidst(); 
-	    			        progressBar.setString("100%"); 
 	    	                drawArea.setImage(null);
 	    	                drawArea.repaint();
-	    	                drawDigit_predictionPanel.updateUI();
+	    	                prediction_pannel.updateUI();
 	    	                	    	                			             			     
 	    			        outputPanel.removeAll();             	               
 	    	                outputPanel.updateUI();
-	    	                
-	    	            
-	    					
+	    	                		
 	    				}
 	    			} catch (Exception ex) {
 	    				ex.printStackTrace();
@@ -220,7 +215,6 @@ public class UI {
         
 
         mainPanel.add(fileSelectPanel, BorderLayout.SOUTH);
-        mainPanel.add(progressBar,BorderLayout.WEST);
     }
     
     //file chooser function
@@ -257,7 +251,7 @@ public class UI {
         // Return the buffered image
         return bimage;
     }
-
+    	
     private static double[] transformImageToOneDimensionalVector(BufferedImage img) {
         double[] imageGray = new double[28 * 28];
         int w = img.getWidth();

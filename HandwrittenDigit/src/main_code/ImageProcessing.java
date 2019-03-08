@@ -18,7 +18,6 @@ public class ImageProcessing {
 		this.currentImage = chosenImage;
 	}
 	
-
 	public BufferedImage convertRGBToGrayscale(BufferedImage img) {
 		//Convert the currently selected image from RGB to greyscale in order to help improve accuracy when comparing it against the data set
 		
@@ -31,8 +30,7 @@ public class ImageProcessing {
 				int alpha = (rgbvalue >> 24) & 0xff;
 				int red = (rgbvalue >> 16) & 0xff;
 				int green = (rgbvalue >> 8) & 0xff;
-				int blue = (rgbvalue) & 0xff;
-				
+				int blue = (rgbvalue) & 0xff;				
 			
 				int grayscale = (int) ((0.3 * red) + (0.59 * green) + (0.11 * blue));
 				int new_pixel_value = 0xFF000000 | ( grayscale << 16 ) |
@@ -40,12 +38,11 @@ public class ImageProcessing {
 						(grayscale);
 				
 				this.grayscaleImg.setRGB(x, y, new_pixel_value);
-				
 			}
 		}
 		return this.grayscaleImg;
 	}
-	// resizing the image after it has been converted from RGB to greyscale to improve accuracy as pixel distortion will be less 
+	// resizing the image after it has been converted from RGB to greyscale 
 	public void resizeGreyScaleImage (int newWidth, int newHeight ) {
 		BufferedImage slectedImage = null;
 		BufferedImage tempImage = null;
@@ -57,7 +54,6 @@ public class ImageProcessing {
 			graph2d.drawImage(imageForResize, 0, 0, null);
 			graph2d.dispose();
 			this.setImage(tempImage);
-			
 			
 		} catch (Exception e) {
 			e.printStackTrace();

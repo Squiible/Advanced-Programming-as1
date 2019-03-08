@@ -3,13 +3,13 @@ import java.awt.image.*;
 import java.io.*;
 
 public class MNISTItem {
-	
+	//declares Variables 
 	private int MNIST_label; 
 	private BufferedImage MNISTbuffimage;
 	private double KnnDistanceValue; 
 	
 	
-	public MNISTItem() {	}
+	public MNISTItem() {}
 	 
 	public int getMNIST_label() {
 		return this.MNIST_label;

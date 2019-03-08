@@ -5,7 +5,7 @@ import javax.imageio.*;
 import java.awt.image.*;
 
 public class ImageFileHandler extends MainFileHandler {
-
+//declares variables 
 	int width;
 	int height;
 	String image_type;
@@ -30,7 +30,6 @@ public class ImageFileHandler extends MainFileHandler {
 		// TODO Auto-generated method stub
 
 	}
-	
 	public BufferedImage readFile(String file_name) {
 		
 		try {
