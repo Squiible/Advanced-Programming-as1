@@ -26,21 +26,22 @@ public class MNIST_reader {
 		
 		
 		
-		//read first 4 bytes 
+		//read the first 4 bytes 
 		int startcode_img = image_data_stream.readInt();
 		int startcode_label = label_data_stream.readInt();
 		
 		System.out.println("start code: images = " + startcode_img +
 			" startcode labels = " + startcode_label);
 		
-		// read the size: 4 bytes
+		// read the next 4 bytes
 		int number_of_labels = label_data_stream.readInt();
 		int number_of_images = image_data_stream.readInt();
 	
 		System.out.println("number of labels: " + number_of_labels + " " +
 				"number of images: " + number_of_images);
-		
+		//reads the next 4 bytes for image set to read image height
 		int image_height = image_data_stream.readInt();
+		//reads the next 4 bytes for image set to read image height
 		int image_width = image_data_stream.readInt();
 		
 		System.out.println("image size: " + image_width + " x "
@@ -70,14 +71,14 @@ public class MNIST_reader {
 					
 					image[row][col] = image_data[(i*image_size)+((row*image_width) + col)];
 					currentImg.setRGB(col, row, image[row][col]);
-					
 				}
 			}
 			train_dataset[i] = new BufferImage(label, currentImg);
-			
+					//print the images with the matching labels 
+//					System.out.println(train_dataset[i].getLabel());
+//				    System.out.println(train_dataset[i].getcurrentImg());
 		}
-		System.out.println(train_dataset[5].getLabel());
-//		System.out.println(train_dataset[5].getcurrentImg());
+
 
 	}
 	
